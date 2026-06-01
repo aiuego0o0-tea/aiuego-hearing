@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ホームページ制作 ヒアリングシート｜aiuego</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:       #8BB8C8;
+      --blue-light: #B8D8E8;
+      --green:      #7D9B76;
+      --cream:      #F8FAFB;
+      --bg-alt:     #F0F5F8;
+      --text:       #2C3A42;
+      --text-sub:   #5A7080;
+      --text-light: #8FA8B4;
+      --white:      #FFFFFF;
+      --radius:     12px;
+      --shadow:     0 4px 20px rgba(44,58,66,0.10);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: var(--bg-alt);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ========== Header ========== */
+    .site-header {
+      background: var(--white);
+      border-bottom: 1px solid #E0EBF0;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .site-header__inner {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .site-header__logo {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .site-header__logo span {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-sub);
+      margin-left: 0.5rem;
+    }
+
+    /* ========== Hero ========== */
+    .hero {
+      background: linear-gradient(135deg, var(--blue) 0%, #9DCCD8 40%, var(--green) 100%);
+      padding: 3rem 2rem 4rem;
+      text-align: center;
+      color: var(--white);
+    }
+    .hero__badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 9999px;
+      padding: 0.3rem 1.2rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    .hero__title {
+      font-family: 'Shippori Mincho', serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      line-height: 1.5;
+    }
+    .hero__sub {
+      font-size: 0.92rem;
+      opacity: 0.9;
+      line-height: 1.8;
+    }
+    .hero__time {
+      margin-top: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.2);
+      border-radius: 9999px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.85rem;
+    }
+
+    /* ========== Main ========== */
+    .main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ========== Form Card ========== */
+    .form-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-card__title {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid var(--blue-light);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .form-card__title .num {
+      background: var(--blue);
+      color: var(--white);
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: 'Noto Sans JP', sans-serif;
+      flex-shrink: 0;
+    }
+
+    /* ========== Form Fields ========== */
+    .field {
+      margin-bottom: 1.8rem;
+    }
+    .field:last-child { margin-bottom: 0; }
+
+    .field__label {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .field__label .req {
+      background: var(--blue);
+      color: var(--white);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.1rem 0.5rem;
+      border-radius: 4px;
+      margin-left: 0.4rem;
+      letter-spacing: 0.05em;
+    }
+    .field__label .opt {
+      color: var(--text-light);
+      font-size: 0.72rem;
+      font-weight: 400;
+      margin-left: 0.4rem;
+    }
+    .field__hint {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      margin-bottom: 0.6rem;
+    }
+    .field__input,
+    .field__textarea {
+      width: 100%;
+      border: 1.5px solid #D0E4EC;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text);
+      background: var(--cream);
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+    .field__input:focus,
+    .field__textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: var(--white);
+    }
+    .field__textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* Radio / Checkbox */
+    .field__options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .field__options--row {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+    }
+    .option-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      padding: 0.6rem 0.8rem;
+      border: 1.5px solid #D0E4EC;
+      border-radius: 8px;
+      background: var(--cream);
+      transition: all 0.15s;
+    }
+    .option-label:hover {
+      border-color: var(--blue);
+      background: #EAF5FA;
+    }
+    .option-label input {
+      margin-top: 0.15rem;
+      accent-color: var(--blue);
+      flex-shrink: 0;
+    }
+    .option-label input:checked + span {
+      font-weight: 500;
+      color: var(--text);
+    }
+    .option-label:has(input:checked) {
+      border-color: var(--blue);
+      background: #EAF5FA;
+    }
+
+    /* Select */
+    .field__select {
+      width: 100%;
+      border: 1.5px solid #D0E4EC;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text);
+      background: var(--cream);
+      cursor: pointer;
+    }
+    .field__select:focus {
+      outline: none;
+      border-color: var(--blue);
+    }
+
+    /* SNS grid */
+    .sns-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    /* ========== Submit ========== */
+    .submit-section {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      text-align: center;
+    }
+    .submit-section__note {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+    }
+    .btn-submit {
+      display: inline-block;
+      width: 100%;
+      max-width: 400px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--green) 100%);
+      color: var(--white);
+      border: none;
+      border-radius: 9999px;
+      padding: 1.1rem 2rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(139,184,200,0.4);
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(139,184,200,0.5);
+    }
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    /* ========== Success ========== */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    .success-screen.show { display: block; }
+    .success-screen__icon { font-size: 4rem; margin-bottom: 1rem; }
+    .success-screen__title {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .success-screen__body {
+      font-size: 0.92rem;
+      color: var(--text-sub);
+      line-height: 1.8;
+    }
+
+    /* ========== Footer ========== */
+    .site-footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    /* ========== Progress ========== */
+    .progress-bar {
+      height: 4px;
+      background: #D0E4EC;
+      border-radius: 9999px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    .progress-bar__fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    @media (max-width: 600px) {
+      .form-card { padding: 1.5rem; }
+      .sns-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="#" class="site-header__logo">aiuego<span>ホームページ制作</span></a>
+    </div>
+  </header>
+
+  <!-- ヒーロー -->
+  <div class="hero">
+    <div class="hero__badge">ヒアリングシート</div>
+    <h1 class="hero__title">
+      「こんなHP欲しい」を、<br>
+      そのまま教えてください。
+    </h1>
+    <p class="hero__sub">
+      専門用語は不要です。「なんとなくこんな感じ」で大丈夫。<br>
+      ご記入後に3営業日以内にご連絡します。
+    </p>
+    <div class="hero__time">⏱ 所要時間：5〜10分</div>
+  </div>
+
+  <!-- メイン -->
+  <main class="main">
+
+    <!-- プログレスバー -->
+    <div class="progress-bar">
+      <div class="progress-bar__fill" id="progressFill"></div>
+    </div>
+
+    <form id="hearingForm" novalidate>
+
+      <!-- セクション1: 事業について -->
+      <div class="form-card">
+        <h2 class="form-card__title">
+          <span class="num">1</span>
+          事業について教えてください
+        </h2>
+
+        <div class="field">
+          <label class="field__label" for="business_name">
+            屋号・お店の名前・活動名
+            <span class="req">必須</span>
+          </label>
+          <p class="field__hint">例）田中工務店 / Yuki's Salon / 山田花子</p>
+          <input class="field__input" type="text" id="business_name" name="business_name" placeholder="屋号・活動名を入力" required>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="business_desc">
+            業種・事業内容
+            <span class="req">必須</span>
+          </label>
+          <p class="field__hint">ざっくりで大丈夫です。</p>
+          <textarea class="field__textarea" id="business_desc" name="business_desc" placeholder="例）フリーランスのヘアメイクアーティストです。出張ヘアセットをメインに活動しています。" required></textarea>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="target">
+            どんな人に見てほしいですか？
+            <span class="req">必須</span>
+          </label>
+          <textarea class="field__textarea" id="target" name="target" placeholder="例）結婚式を控えた20〜30代の女性 / 地域の中小企業の経営者" required></textarea>
+        </div>
+
+        <div class="field">
+          <p class="field__label">ホームページを作る一番の目的<span class="req">必須</span></p>
+          <div class="field__options">
+            <label class="option-label">
+              <input type="radio" name="purpose" value="問い合わせ・依頼を増やしたい" required>
+              <span>問い合わせ・依頼を増やしたい</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="purpose" value="名刺がわりに持っておきたい">
+              <span>名刺がわりに持っておきたい</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="purpose" value="実績・ポートフォリオを見せたい">
+              <span>実績・ポートフォリオを見せたい</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="purpose" value="オンライン予約・申し込みを受け付けたい">
+              <span>オンライン予約・申し込みを受け付けたい</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- セクション2: ページ構成 -->
+      <div class="form-card">
+        <h2 class="form-card__title">
+          <span class="num">2</span>
+          ページ構成
+        </h2>
+
+        <div class="field">
+          <p class="field__label">必要なページ（複数OK）<span class="req">必須</span></p>
+          <div class="field__options">
+            <label class="option-label">
+              <input type="checkbox" name="pages" value="トップページ" checked>
+              <span>トップページ（必須）</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="pages" value="サービス内容・料金ページ">
+              <span>サービス内容・料金ページ</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="pages" value="プロフィール・会社概要ページ">
+              <span>プロフィール・会社概要ページ</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="pages" value="実績・ポートフォリオページ">
+              <span>実績・ポートフォリオページ</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="pages" value="お問い合わせページ">
+              <span>お問い合わせページ</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="pages" value="ブログ・お知らせページ">
+              <span>ブログ・お知らせページ</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="pages" value="よくある質問ページ">
+              <span>よくある質問ページ</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="pages" value="アクセス・地図ページ">
+              <span>アクセス・地図ページ</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <p class="field__label">ページ数の目安<span class="req">必須</span></p>
+          <div class="field__options">
+            <label class="option-label">
+              <input type="radio" name="page_count" value="1〜2ページ" required>
+              <span>1〜2ページ（とにかくシンプルでOK）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="page_count" value="3〜5ページ">
+              <span>3〜5ページ（基本的な構成）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="page_count" value="6ページ以上">
+              <span>6ページ以上（しっかり作りたい）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="page_count" value="まだ決めていない">
+              <span>まだ決めていない</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- セクション3: デザイン -->
+      <div class="form-card">
+        <h2 class="form-card__title">
+          <span class="num">3</span>
+          デザインのご希望
+        </h2>
+
+        <div class="field">
+          <p class="field__label">デザインの雰囲気（複数OK）<span class="req">必須</span></p>
+          <div class="field__options">
+            <label class="option-label">
+              <input type="checkbox" name="design_feel" value="シンプル・ミニマル">
+              <span>シンプル・ミニマル</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="design_feel" value="かわいい・やわらか">
+              <span>かわいい・やわらか</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="design_feel" value="クール・スタイリッシュ">
+              <span>クール・スタイリッシュ</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="design_feel" value="明るい・ポップ">
+              <span>明るい・ポップ</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="design_feel" value="和風・落ち着き">
+              <span>和風・落ち着き</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="design_feel" value="高級感・洗練">
+              <span>高級感・洗練</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="design_feel" value="ナチュラル・アース系">
+              <span>ナチュラル・アース系</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="design_feel" value="プロフェッショナル・信頼感">
+              <span>プロフェッショナル・信頼感</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="color">
+            好きなカラー・イメージカラー
+            <span class="opt">任意</span>
+          </label>
+          <p class="field__hint">色の名前でもOK。「白と青が好き」「緑系」など。</p>
+          <input class="field__input" type="text" id="color" name="color" placeholder="例）ピンク系・白 / #8BB8C8">
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="reference">
+            参考にしたいサイト
+            <span class="opt">任意</span>
+          </label>
+          <p class="field__hint">「このサイトみたいな感じ」があれば。複数でも他業種でもOK。</p>
+          <textarea class="field__textarea" id="reference" name="reference" placeholder="https://..." style="min-height:70px;"></textarea>
+        </div>
+      </div>
+
+      <!-- セクション4: 素材・機能 -->
+      <div class="form-card">
+        <h2 class="form-card__title">
+          <span class="num">4</span>
+          素材・機能
+        </h2>
+
+        <div class="field">
+          <p class="field__label">掲載する写真・画像について<span class="req">必須</span></p>
+          <div class="field__options">
+            <label class="option-label">
+              <input type="radio" name="photos" value="自分で用意できる" required>
+              <span>自分で用意できる（写真・ロゴ等あり）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="photos" value="一部だけある">
+              <span>一部だけある（残りはフリー素材でOK）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="photos" value="素材がない">
+              <span>素材がない（フリー素材を一緒に選んでほしい）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="photos" value="テキストのみでOK">
+              <span>写真・ロゴはない（テキストのみでOK）</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <p class="field__label">掲載するテキスト・文章<span class="req">必須</span></p>
+          <div class="field__options">
+            <label class="option-label">
+              <input type="radio" name="text_prep" value="自分で書ける" required>
+              <span>自分で書ける</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="text_prep" value="一緒に考えてほしい">
+              <span>一緒に考えてほしい（ざっくりしたメモはある）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="text_prep" value="お任せしたい">
+              <span>まったくわからない（お任せしたい）</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <p class="field__label">Googleマップの設置<span class="opt">任意</span></p>
+          <div class="field__options">
+            <label class="option-label">
+              <input type="radio" name="google_map" value="必要">
+              <span>必要（店舗・事務所がある）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="google_map" value="不要">
+              <span>不要</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="google_map" value="オンライン対応のみ">
+              <span>店舗・事務所はない（出張・オンライン対応）</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <p class="field__label">設置したいSNSリンク<span class="opt">任意</span></p>
+          <div class="field__options sns-grid">
+            <label class="option-label">
+              <input type="checkbox" name="sns" value="Instagram">
+              <span>Instagram</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="sns" value="X（旧Twitter）">
+              <span>X（旧Twitter）</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="sns" value="LINE公式">
+              <span>LINE公式</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="sns" value="YouTube">
+              <span>YouTube</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="sns" value="TikTok">
+              <span>TikTok</span>
+            </label>
+            <label class="option-label">
+              <input type="checkbox" name="sns" value="設置しない">
+              <span>設置しない</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- セクション5: 公開・保守 -->
+      <div class="form-card">
+        <h2 class="form-card__title">
+          <span class="num">5</span>
+          公開・保守について
+        </h2>
+
+        <div class="field">
+          <p class="field__label">独自ドメインの取得<span class="req">必須</span></p>
+          <p class="field__hint">「〇〇.com」などのドメインについてです。取得しなくても公開できます。</p>
+          <div class="field__options">
+            <label class="option-label">
+              <input type="radio" name="domain" value="取得したい" required>
+              <span>独自ドメインを取得したい（年間¥1,000〜2,000程度）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="domain" value="不要">
+              <span>aiuegoのサーバーURLでOK（取得不要）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="domain" value="まだ決めていない">
+              <span>まだ決めていない</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <p class="field__label">希望の公開時期<span class="opt">任意</span></p>
+          <div class="field__options">
+            <label class="option-label">
+              <input type="radio" name="schedule" value="なるべく早く">
+              <span>なるべく早く（急ぎ）</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="schedule" value="1ヶ月以内">
+              <span>1ヶ月以内</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="schedule" value="2〜3ヶ月以内">
+              <span>2〜3ヶ月以内</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="schedule" value="まだ決めていない">
+              <span>まだ決めていない</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <p class="field__label">月額保守プランに興味がありますか？<span class="opt">任意</span></p>
+          <p class="field__hint">月1〜2回の更新・バックアップ・確認などを月額¥1,500〜でお任せいただけます。</p>
+          <div class="field__options">
+            <label class="option-label">
+              <input type="radio" name="maintenance" value="はい">
+              <span>はい、興味がある</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="maintenance" value="いいえ">
+              <span>いいえ、今は不要</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="maintenance" value="公開後に検討">
+              <span>公開後に検討したい</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- セクション6: 自由記入 -->
+      <div class="form-card">
+        <h2 class="form-card__title">
+          <span class="num">6</span>
+          ご要望・ご連絡先
+        </h2>
+
+        <div class="field">
+          <label class="field__label" for="message">
+            ご相談・ご要望・気になること
+            <span class="opt">任意</span>
+          </label>
+          <p class="field__hint">「こんな機能が欲しい」「予算が不安」「こういうのは無理？」など、思ったことをそのまま。</p>
+          <textarea class="field__textarea" id="message" name="message" placeholder="なんでも書いてください。" style="min-height:120px;"></textarea>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="contact">
+            ご連絡先（名前 + メールアドレス or LINE ID）
+            <span class="req">必須</span>
+          </label>
+          <p class="field__hint">Coconala経由の方は「Coconalaで連絡」と入力してください。</p>
+          <input class="field__input" type="text" id="contact" name="contact" placeholder="例）山田花子 / hanako@example.com" required>
+        </div>
+      </div>
+
+      <!-- 送信ボタン -->
+      <div class="submit-section">
+        <p class="submit-section__note">
+          ご記入ありがとうございます。<br>
+          送信後、3営業日以内にご連絡します。<br>
+          わからない箇所は空白のままでOKです。
+        </p>
+        <button type="submit" class="btn-submit">
+          送信する ✓
+        </button>
+      </div>
+
+    </form>
+
+    <!-- 成功画面 -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-screen__icon">🎉</div>
+      <h2 class="success-screen__title">送信完了しました！</h2>
+      <p class="success-screen__body">
+        ヒアリングシートのご記入ありがとうございます。<br>
+        内容を確認次第、3営業日以内にご連絡します。<br><br>
+        ご不明な点がございましたら、<br>
+        Coconalaのメッセージ機能からお気軽にどうぞ。
+      </p>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2026 aiuego. All rights reserved.
+  </footer>
+
+  <script>
+    // プログレスバー
+    function updateProgress() {
+      const form = document.getElementById('hearingForm');
+      const required = form.querySelectorAll('[required]');
+      let filled = 0;
+      const checked = new Set();
+
+      required.forEach(el => {
+        if (el.type === 'radio' || el.type === 'checkbox') {
+          if (el.checked) checked.add(el.name);
+        } else if (el.value.trim() !== '') {
+          filled++;
+        }
+      });
+
+      const radioGroups = new Set();
+      required.forEach(el => {
+        if (el.type === 'radio') radioGroups.add(el.name);
+      });
+
+      const total = (required.length - radioGroups.size) + radioGroups.size;
+      const filledCount = filled + checked.size;
+      const pct = Math.min(100, Math.round((filledCount / total) * 100));
+      document.getElementById('progressFill').style.width = pct + '%';
+    }
+
+    document.getElementById('hearingForm').addEventListener('input', updateProgress);
+    updateProgress();
+
+    // フォーム送信
+    document.getElementById('hearingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // フォームデータ収集
+      const formData = new FormData(this);
+      const data = {};
+
+      // チェックボックスはまとめる
+      this.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        if (!data[cb.name]) data[cb.name] = [];
+        if (cb.checked) data[cb.name].push(cb.value);
+      });
+
+      formData.forEach((value, key) => {
+        if (!data[key]) data[key] = value;
+      });
+
+      // JSON出力（コンソール確認用）
+      console.log('=== ヒアリングシート送信データ ===');
+      console.log(JSON.stringify(data, null, 2));
+
+      // 成功画面表示
+      document.getElementById('hearingForm').style.display = 'none';
+      document.getElementById('successScreen').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // ※ 実際の送信先（Formspree等）はここに追加
+      // fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(data)
+      // });
+    });
+  </script>
+
+</body>
+</html>
