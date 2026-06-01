@@ -307,6 +307,62 @@
       transform: translateY(0);
     }
 
+    /* ========== Confirm Screen ========== */
+    .confirm-screen {
+      display: none;
+    }
+    .confirm-screen.show { display: block; }
+    .confirm-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .confirm-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0.5rem 1rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid #EDF2F5;
+      font-size: 0.88rem;
+    }
+    .confirm-item:last-child { border-bottom: none; }
+    .confirm-item__label {
+      color: var(--text-sub);
+      font-weight: 500;
+      padding-top: 0.1rem;
+    }
+    .confirm-item__value {
+      color: var(--text);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    .confirm-item__value--empty {
+      color: var(--text-light);
+      font-style: italic;
+    }
+    .btn-back {
+      flex: 1;
+      min-width: 160px;
+      background: var(--white);
+      color: var(--text-sub);
+      border: 1.5px solid #D0E4EC;
+      border-radius: 9999px;
+      padding: 0.9rem 1.5rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-back:hover {
+      border-color: var(--blue);
+      color: var(--text);
+    }
+    .btn-submit--confirm {
+      flex: 2;
+      min-width: 200px;
+    }
+
     /* ========== Success ========== */
     .success-screen {
       display: none;
@@ -325,6 +381,38 @@
       font-size: 0.92rem;
       color: var(--text-sub);
       line-height: 1.8;
+    }
+
+    /* ========== Restore Banner ========== */
+    .restore-banner {
+      display: none;
+      background: #EAF5FA;
+      border: 1.5px solid var(--blue-light);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.2rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      align-items: center;
+      gap: 0.8rem;
+      justify-content: space-between;
+    }
+    .restore-banner.show { display: flex; }
+    .restore-banner__btns { display: flex; gap: 0.5rem; flex-shrink: 0; }
+    .btn-restore, .btn-clear {
+      border: 1.5px solid var(--blue);
+      border-radius: 9999px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    .btn-restore { background: var(--blue); color: white; }
+    .btn-clear { background: white; color: var(--text-sub); border-color: #D0E4EC; }
+
+    @media (max-width: 480px) {
+      .confirm-item { grid-template-columns: 1fr; gap: 0.2rem; }
+      .restore-banner { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     }
 
     /* ========== Footer ========== */
@@ -382,6 +470,15 @@
 
   <!-- メイン -->
   <main class="main">
+
+    <!-- 前回入力の復元バナー -->
+    <div class="restore-banner" id="restoreBanner">
+      <span>📝 前回の入力が保存されています。復元しますか？</span>
+      <div class="restore-banner__btns">
+        <button class="btn-restore" id="btnRestore">復元する</button>
+        <button class="btn-clear" id="btnClear">破棄する</button>
+      </div>
+    </div>
 
     <!-- プログレスバー -->
     <div class="progress-bar">
@@ -782,6 +879,24 @@
 
     </form>
 
+    <!-- 確認画面 -->
+    <div class="confirm-screen" id="confirmScreen">
+      <div class="form-card">
+        <h2 class="form-card__title">
+          <span class="num">✓</span>
+          送信内容の確認
+        </h2>
+        <p style="font-size:0.88rem;color:var(--text-sub);margin-bottom:1.5rem;">
+          以下の内容で送信します。内容をご確認ください。
+        </p>
+        <div id="confirmContent" class="confirm-list"></div>
+      </div>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <button class="btn-back" id="btnBack">← 戻って修正する</button>
+        <button class="btn-submit btn-submit--confirm" id="btnConfirm">この内容で送信する ✓</button>
+      </div>
+    </div>
+
     <!-- 成功画面 -->
     <div class="success-screen" id="successScreen">
       <div class="success-screen__icon">🎉</div>
@@ -801,7 +916,98 @@
   </footer>
 
   <script>
-    // プログレスバー
+    const STORAGE_KEY = 'aiuego_hearing_draft';
+
+    // ラベルマッピング（確認画面表示用）
+    const LABELS = {
+      business_name: '屋号・活動名',
+      business_desc: '業種・事業内容',
+      target: '見てほしい相手',
+      purpose: '目的',
+      pages: '必要なページ',
+      page_count: 'ページ数',
+      design_feel: 'デザインの雰囲気',
+      color: 'カラー・イメージ',
+      reference: '参考サイト',
+      photos: '写真・画像',
+      text_prep: '文章の準備',
+      google_map: 'Googleマップ',
+      sns: 'SNSリンク',
+      domain: 'ドメイン',
+      schedule: '希望公開時期',
+      maintenance: '保守プラン',
+      message: 'ご要望・気になること',
+      contact: 'ご連絡先'
+    };
+
+    // ========== フォームデータ収集 ==========
+    function collectData() {
+      const form = document.getElementById('hearingForm');
+      const data = {};
+
+      // チェックボックス初期化
+      form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        if (!data[cb.name]) data[cb.name] = [];
+      });
+
+      // 全フィールド収集
+      new FormData(form).forEach((value, key) => {
+        if (Array.isArray(data[key])) return; // チェックボックスはスキップ
+        data[key] = value;
+      });
+
+      // チェックボックス収集
+      form.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+        if (!data[cb.name]) data[cb.name] = [];
+        if (!data[cb.name].includes(cb.value)) data[cb.name].push(cb.value);
+      });
+
+      return data;
+    }
+
+    // ========== localStorage 保存 ==========
+    function saveToStorage() {
+      try {
+        const data = collectData();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch(e) {}
+    }
+
+    // ========== localStorage 復元 ==========
+    function loadFromStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch(e) { return null; }
+    }
+
+    function applyData(data) {
+      const form = document.getElementById('hearingForm');
+      Object.entries(data).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          // チェックボックス
+          form.querySelectorAll(`input[name="${key}"][type="checkbox"]`).forEach(cb => {
+            cb.checked = value.includes(cb.value);
+          });
+        } else {
+          const el = form.querySelector(`[name="${key}"]`);
+          if (!el) return;
+          if (el.type === 'radio') {
+            const target = form.querySelector(`input[name="${key}"][value="${value}"]`);
+            if (target) target.checked = true;
+          } else {
+            el.value = value;
+          }
+        }
+      });
+    }
+
+    function clearStorage() {
+      try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+    }
+
+    // ========== プログレスバー ==========
     function updateProgress() {
       const form = document.getElementById('hearingForm');
       const required = form.querySelectorAll('[required]');
@@ -809,60 +1015,101 @@
       const checked = new Set();
 
       required.forEach(el => {
-        if (el.type === 'radio' || el.type === 'checkbox') {
+        if (el.type === 'radio') {
           if (el.checked) checked.add(el.name);
-        } else if (el.value.trim() !== '') {
+        } else if (el.type !== 'checkbox' && el.value.trim() !== '') {
           filled++;
         }
       });
 
-      const radioGroups = new Set();
-      required.forEach(el => {
-        if (el.type === 'radio') radioGroups.add(el.name);
-      });
-
-      const total = (required.length - radioGroups.size) + radioGroups.size;
-      const filledCount = filled + checked.size;
-      const pct = Math.min(100, Math.round((filledCount / total) * 100));
+      const radioGroups = new Set([...required].filter(e => e.type === 'radio').map(e => e.name));
+      const total = [...required].filter(e => e.type !== 'radio').length + radioGroups.size;
+      const pct = Math.min(100, Math.round(((filled + checked.size) / total) * 100));
       document.getElementById('progressFill').style.width = pct + '%';
     }
 
-    document.getElementById('hearingForm').addEventListener('input', updateProgress);
-    updateProgress();
-
-    // フォーム送信
-    document.getElementById('hearingForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      // フォームデータ収集
-      const formData = new FormData(this);
-      const data = {};
-
-      // チェックボックスはまとめる
-      this.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-        if (!data[cb.name]) data[cb.name] = [];
-        if (cb.checked) data[cb.name].push(cb.value);
+    // ========== 確認画面生成 ==========
+    function buildConfirmScreen(data) {
+      const container = document.getElementById('confirmContent');
+      container.innerHTML = '';
+      Object.entries(LABELS).forEach(([key, label]) => {
+        const val = data[key];
+        const display = Array.isArray(val)
+          ? (val.length ? val.join('、') : '')
+          : (val || '');
+        const item = document.createElement('div');
+        item.className = 'confirm-item';
+        item.innerHTML = `
+          <span class="confirm-item__label">${label}</span>
+          <span class="confirm-item__value${display ? '' : ' confirm-item__value--empty'}">${display || '（未入力）'}</span>
+        `;
+        container.appendChild(item);
       });
+    }
 
-      formData.forEach((value, key) => {
-        if (!data[key]) data[key] = value;
+    // ========== 画面切替 ==========
+    function show(id) {
+      ['hearingForm', 'confirmScreen', 'successScreen'].forEach(sid => {
+        const el = document.getElementById(sid);
+        if (sid === 'hearingForm') {
+          el.style.display = sid === id ? '' : 'none';
+        } else {
+          el.classList.toggle('show', sid === id);
+        }
       });
-
-      // JSON出力（コンソール確認用）
-      console.log('=== ヒアリングシート送信データ ===');
-      console.log(JSON.stringify(data, null, 2));
-
-      // 成功画面表示
-      document.getElementById('hearingForm').style.display = 'none';
-      document.getElementById('successScreen').classList.add('show');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-      // ※ 実際の送信先（Formspree等）はここに追加
-      // fetch('https://formspree.io/f/YOUR_FORM_ID', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data)
-      // });
+    // ========== 初期化 ==========
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = loadFromStorage();
+      if (saved && Object.values(saved).some(v => Array.isArray(v) ? v.length > 0 : v)) {
+        document.getElementById('restoreBanner').classList.add('show');
+      }
+
+      // 復元ボタン
+      document.getElementById('btnRestore').addEventListener('click', () => {
+        applyData(saved);
+        document.getElementById('restoreBanner').classList.remove('show');
+        updateProgress();
+      });
+
+      // 破棄ボタン
+      document.getElementById('btnClear').addEventListener('click', () => {
+        clearStorage();
+        document.getElementById('restoreBanner').classList.remove('show');
+      });
+
+      // 入力時: 保存 + プログレス更新
+      document.getElementById('hearingForm').addEventListener('input', () => {
+        saveToStorage();
+        updateProgress();
+      });
+      updateProgress();
+
+      // 送信 → 確認画面へ
+      document.getElementById('hearingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const data = collectData();
+        buildConfirmScreen(data);
+        show('confirmScreen');
+      });
+
+      // 戻るボタン
+      document.getElementById('btnBack').addEventListener('click', () => {
+        show('hearingForm');
+      });
+
+      // 確定送信
+      document.getElementById('btnConfirm').addEventListener('click', () => {
+        const data = collectData();
+
+        // ※ 送信先はここに追加（メール等）
+        // fetch('https://...', { method:'POST', body: JSON.stringify(data) });
+
+        clearStorage(); // 送信完了でドラフトを削除
+        show('successScreen');
+      });
     });
   </script>
 
