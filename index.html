@@ -910,9 +910,11 @@
         ヒアリングシートのご記入ありがとうございます。<br>
         内容を確認のうえ、3営業日以内にご連絡いたします。
       </p>
-      <div id="successIdBlock" style="display:none; margin:1.5rem auto; max-width:480px; background:#EAF5FA; border:2px solid #8BB8C8; border-radius:12px; padding:1.2rem;">
-        <p style="margin:0 0 0.5rem; font-size:0.85rem; color:#5A7080;">📋 受付ID（お問い合わせ時にご使用ください）</p>
-        <p id="successId" style="color:#2C3A42; font-weight:700; font-size:1.1rem; letter-spacing:0.05em; margin:0;"></p>
+      <div style="margin:1.5rem auto; max-width:480px; background:#EAF5FA; border:2px solid #8BB8C8; border-radius:12px; padding:1.2rem;">
+        <p style="margin:0; font-size:0.9rem; color:#2C3A42; line-height:1.7;">
+          📬 ご入力のメールアドレス宛に<br>
+          確認のご連絡をお送りします。
+        </p>
       </div>
       <p class="success-screen__body" style="margin-top:1.2rem;">
         ご質問・修正のご要望は<br>
@@ -1121,27 +1123,20 @@
         btn.textContent = '⏳ 送信中... しばらくお待ちください';
 
         try {
-          const res = await fetch('https://script.google.com/macros/s/AKfycbzRSkg2Z6IAxaqtqiSRrMMGs2DHJid87m_38z4Lapz3AxC6jTX0zH-UwU-UGTKS3_Y1kA/exec', {
+          // GAS は CORS リダイレクトを行うため no-cors モードで送信
+          // Content-Type は text/plain でないと no-cors で弾かれる
+          // GAS 側は e.postData.contents で JSON 文字列として受信できる
+          await fetch('https://script.google.com/macros/s/AKfycbzRSkg2Z6IAxaqtqiSRrMMGs2DHJid87m_38z4Lapz3AxC6jTX0zH-UwU-UGTKS3_Y1kA/exec', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(data),
           });
 
-          const result = await res.json();
+          // no-cors ではレスポンスが読めないが、例外が出なければ送信成功とみなす
+          clearStorage();
+          show('successScreen');
 
-          if (result.success) {
-            clearStorage();
-            // 成功画面に受付IDを表示
-            if (result.submissionId) {
-              document.getElementById('successId').textContent = result.submissionId;
-              document.getElementById('successIdBlock').style.display = 'block';
-            }
-            show('successScreen');
-          } else {
-            alert('エラーが発生しました: ' + (result.error || '不明なエラー'));
-            btn.disabled = false;
-            btn.textContent = 'この内容で送信する ✓';
-          }
         } catch (e) {
           alert('送信中にエラーが発生しました。時間をおいて再度お試しください。');
           btn.disabled = false;
