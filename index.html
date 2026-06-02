@@ -1121,7 +1121,7 @@
         btn.textContent = '⏳ 送信中... しばらくお待ちください';
 
         try {
-          const res = await fetch('PLACEHOLDER_GAS_URL', {
+          const res = await fetch('https://script.google.com/macros/s/AKfycbzRSkg2Z6IAxaqtqiSRrMMGs2DHJid87m_38z4Lapz3AxC6jTX0zH-UwU-UGTKS3_Y1kA/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
