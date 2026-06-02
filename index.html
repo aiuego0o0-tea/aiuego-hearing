@@ -7,8 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@600;700&display=swap" rel="stylesheet">
-  <!-- Cloudflare Turnstile（bot対策） -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <!-- ※ Turnstile は完全自動化システム移行時に追加 -->
   <style>
     :root {
       --blue:       #8BB8C8;
@@ -872,17 +871,10 @@
         <input type="text" name="_hp" tabindex="-1" autocomplete="off">
       </div>
 
-      <!-- Cloudflare Turnstile（bot判定） -->
       <div class="submit-section">
-        <div
-          class="cf-turnstile"
-          data-sitekey="PLACEHOLDER_TURNSTILE_SITEKEY"
-          data-theme="light"
-          style="margin-bottom:1.2rem;"
-        ></div>
         <p class="submit-section__note">
           ご記入ありがとうございます。<br>
-          送信後、自動でホームページを生成します。<br>
+          送信後、3営業日以内にご連絡いたします。<br>
           わからない箇所は空白のままでOKです。
         </p>
         <button type="submit" class="btn-submit" id="btnSubmit">
@@ -912,19 +904,18 @@
 
     <!-- 成功画面 -->
     <div class="success-screen" id="successScreen">
-      <div class="success-screen__icon">🎉</div>
-      <h2 class="success-screen__title">ホームページを生成しました！</h2>
+      <div class="success-screen__icon">✅</div>
+      <h2 class="success-screen__title">送信が完了しました！</h2>
       <p class="success-screen__body">
         ヒアリングシートのご記入ありがとうございます。<br>
-        ご入力の内容をもとにホームページを自動生成しました。
+        内容を確認のうえ、3営業日以内にご連絡いたします。
       </p>
-      <div id="successUrlBlock" style="display:none; margin:1.5rem auto; max-width:480px; background:#EAF5FA; border:2px solid #8BB8C8; border-radius:12px; padding:1.2rem;">
-        <p style="margin:0 0 0.5rem; font-size:0.85rem; color:#5A7080;">🔗 あなたのホームページ（仮公開中）</p>
-        <a id="successUrl" href="#" target="_blank" style="color:#8BB8C8; font-weight:700; word-break:break-all; font-size:0.95rem;"></a>
-        <p style="margin:0.8rem 0 0; font-size:0.78rem; color:#8FA8B4;">※ 反映まで1〜2分かかる場合があります</p>
+      <div id="successIdBlock" style="display:none; margin:1.5rem auto; max-width:480px; background:#EAF5FA; border:2px solid #8BB8C8; border-radius:12px; padding:1.2rem;">
+        <p style="margin:0 0 0.5rem; font-size:0.85rem; color:#5A7080;">📋 受付ID（お問い合わせ時にご使用ください）</p>
+        <p id="successId" style="color:#2C3A42; font-weight:700; font-size:1.1rem; letter-spacing:0.05em; margin:0;"></p>
       </div>
-      <p class="success-screen__body">
-        内容の確認・修正のご要望は<br>
+      <p class="success-screen__body" style="margin-top:1.2rem;">
+        ご質問・修正のご要望は<br>
         Coconalaのメッセージ機能からお気軽にどうぞ。
       </p>
     </div>
@@ -1125,16 +1116,12 @@
         const data = collectData();
         const btn  = document.getElementById('btnConfirm');
 
-        // Turnstileトークン取得
-        const turnstileEl = document.querySelector('input[name="cf-turnstile-response"]');
-        data['cf-turnstile-response'] = turnstileEl ? turnstileEl.value : '';
-
         // ボタンをローディング表示
         btn.disabled = true;
-        btn.textContent = '⏳ HP生成中... しばらくお待ちください';
+        btn.textContent = '⏳ 送信中... しばらくお待ちください';
 
         try {
-          const res = await fetch('PLACEHOLDER_WORKER_URL', {
+          const res = await fetch('PLACEHOLDER_GAS_URL', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
@@ -1144,12 +1131,10 @@
 
           if (result.success) {
             clearStorage();
-            // 成功画面にURLを表示
-            const urlBox = document.getElementById('successUrl');
-            if (urlBox && result.url) {
-              urlBox.href = result.url;
-              urlBox.textContent = result.url;
-              document.getElementById('successUrlBlock').style.display = 'block';
+            // 成功画面に受付IDを表示
+            if (result.submissionId) {
+              document.getElementById('successId').textContent = result.submissionId;
+              document.getElementById('successIdBlock').style.display = 'block';
             }
             show('successScreen');
           } else {
